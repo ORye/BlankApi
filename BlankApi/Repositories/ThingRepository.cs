@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace BlankApi.Repositories
 {
@@ -59,7 +60,7 @@ namespace BlankApi.Repositories
                 Thing thingToModify = db.Thing.Find(thing.Id);
                 if (thingToModify == null)
                 {
-                    throw new InvalidOperationException($"Update failed. No Thing exists by id: {thing.Id}.");
+                    throw new ObjectNotFoundException($"Update failed. No Thing exists by id: {thing.Id}.");
                 }
 
                 // TODO: move updating to function to do mapping
@@ -78,12 +79,32 @@ namespace BlankApi.Repositories
                 Thing thingToDelete = db.Thing.Find(id);
                 if (thingToDelete == null)
                 {
-                    throw new InvalidOperationException($"Delete failed. No Thing exists by id: {id}.");
+                    throw new ObjectNotFoundException($"Delete failed. No Thing exists by id: {id}.");
                 }
 
                 db.Thing.Remove(thingToDelete);
                 db.SaveChanges();
             }
+        }
+    }
+
+    [Serializable]
+    internal class ObjectNotFoundException : Exception
+    {
+        public ObjectNotFoundException()
+        {
+        }
+
+        public ObjectNotFoundException(string message) : base(message)
+        {
+        }
+
+        public ObjectNotFoundException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected ObjectNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }
