@@ -36,7 +36,7 @@ namespace ShellApi
             else
             {
                 // TODO: set up other environment db contexts
-                throw new NotImplementedException("Non development DB providers are not yet set up.");
+                throw new NotImplementedException("Non-development DB providers are not yet set up.");
             }
 
             services.AddDbContext<ShellApiContext>(dbContextOptions);
@@ -51,7 +51,7 @@ namespace ShellApi
 
                 using (IServiceScope serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
                 {
-                    var context = serviceScope.ServiceProvider.GetRequiredService<ShellApiContext>();
+                    ShellApiContext context = serviceScope.ServiceProvider.GetRequiredService<ShellApiContext>();
                     context.Database.EnsureCreated();
                 }
             }
