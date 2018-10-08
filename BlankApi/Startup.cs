@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BlankApi.Data;
 using System;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace BlankApi
 {
@@ -40,6 +41,12 @@ namespace BlankApi
             }
 
             services.AddDbContext<BlankApiContext>(dbContextOptions);
+
+            // Adding swagger docs for easy API implementation
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Blank API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +61,12 @@ namespace BlankApi
                     BlankApiContext context = serviceScope.ServiceProvider.GetRequiredService<BlankApiContext>();
                     context.Database.EnsureCreated();
                 }
+
+                // Adding swagger UI only for development purposes
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Blank API V1");
+                });
             }
             else
             {
@@ -62,6 +75,7 @@ namespace BlankApi
 
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseSwagger();
         }
     }
 }
