@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ShellApi.Data;
+using BlankApi.Data;
 using System;
 
-namespace ShellApi
+namespace BlankApi
 {
     public class Startup
     {
@@ -39,7 +39,7 @@ namespace ShellApi
                 throw new NotImplementedException("Non-development DB providers are not yet set up.");
             }
 
-            services.AddDbContext<ShellApiContext>(dbContextOptions);
+            services.AddDbContext<BlankApiContext>(dbContextOptions);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +51,7 @@ namespace ShellApi
 
                 using (IServiceScope serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
                 {
-                    ShellApiContext context = serviceScope.ServiceProvider.GetRequiredService<ShellApiContext>();
+                    BlankApiContext context = serviceScope.ServiceProvider.GetRequiredService<BlankApiContext>();
                     context.Database.EnsureCreated();
                 }
             }
