@@ -9,8 +9,8 @@ namespace BlankApi.Data
         { }
 
         //TODO: add db entities
-        DbSet<Thing> Thing { get; set; }
-        DbSet<AMaBobber> AMaBobber { get; set; }
+        public DbSet<Thing> Thing { get; set; }
+        public DbSet<AMaBobber> AMaBobber { get; set; }
     }
 
     public class Thing
