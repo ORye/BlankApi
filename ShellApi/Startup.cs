@@ -11,13 +11,15 @@ namespace ShellApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
-        private IHostingEnvironment CurrentEnvironment { get; set; }
+
+        private IHostingEnvironment Environment { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -25,9 +27,10 @@ namespace ShellApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             Action<DbContextOptionsBuilder> dbContextOptions;
-            if (CurrentEnvironment.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
-                string connectionString = "Data Source=./local.db";
+                string localDbPath = "./local.db";
+                string connectionString = $"Data Source={localDbPath}";
                 dbContextOptions = options => options.UseSqlite(connectionString);
             }
             else
@@ -42,10 +45,15 @@ namespace ShellApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            CurrentEnvironment = env;
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                using (IServiceScope serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+                {
+                    var context = serviceScope.ServiceProvider.GetRequiredService<ShellApiContext>();
+                    context.Database.EnsureCreated();
+                }
             }
             else
             {
