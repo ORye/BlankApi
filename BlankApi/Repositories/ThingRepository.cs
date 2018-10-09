@@ -28,7 +28,7 @@ namespace BlankApi.Repositories
         {
             using (var db = new BlankApiContext(_options))
             {
-                return db.Thing.FirstOrDefault(x => x.Id == id);
+                return db.Thing.Find(id);
             }
         }
 
