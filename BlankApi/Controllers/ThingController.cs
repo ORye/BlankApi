@@ -26,7 +26,7 @@ namespace BlankApi.Controllers
         [HttpGet("{id}")]
         public ActionResult<Thing> GetThing(int id)
         {
-            return _thingRepository.Get(id);
+            return _thingRepository.Get(id) ?? (ActionResult<Thing>)new NotFoundResult();
         }
 
         [HttpPost]
